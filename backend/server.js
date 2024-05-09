@@ -6,8 +6,7 @@ const PORT = process.env.PORT || 8000;
 
 
 // middleware
-app.use(notFound)
-app.use(errorHandler)
+
 app.use("/api/users", userRoute)
 
 
@@ -15,6 +14,9 @@ app.use("/api/users", userRoute)
 app.get('/', (req, res) => {
     res.status(200).json({message: 'Ultra Auth root page'})
 })
+
+app.use(notFound)
+app.use(errorHandler)
 
 app.listen(PORT, ()=>{
     console.log(`Server is running on port ${PORT}`);

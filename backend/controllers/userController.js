@@ -86,7 +86,27 @@ const getUserProfile = asyncHandler( async (req, res) => {
 // route PUT => /api/users/profile
 // access private
 const updateUserProfile = asyncHandler( async (req, res) => {
-    res.status(200).json({message: 'User Update Profile'})
+    const {firstname, lastname, email, password} = req.body
+    const user = await User.findById(req.user._id)
+    
+    if (user) {
+        user.firstname = firstname || user.firstname
+        user.lastname = lastname || user.lastname
+        user.email = email || user.email
+        // check if password is inlcuded in body
+        if(password) {
+            user.password = password || user.password
+        }
+        
+    }
+    const updatedUser = await user.save()
+    res.status(200).json({
+        _id: updatedUser._id,
+        firstname: updatedUser.firstname,
+        lastname: updatedUser.lastname,
+        email: updatedUser.email,
+        isAdmin: updatedUser.isAdmin,
+    })
 })
 
 export {userAuth , userRegistration, getUserProfile, updateUserProfile, logoutUser}

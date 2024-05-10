@@ -37,6 +37,21 @@ const userRegistration = asyncHandler( async (req, res) => {
 // route POST => /api/users/auth
 // access public
 const userAuth = asyncHandler( async (req, res) => {
+    const {email, password} = req.body;
+    const user = await User.findOne({email});
+    if (user && await user.matchPassword(password)) {
+        await generateToken(user._id, res);
+        res.status(201).json({
+            _id: user._id,
+            firstname: user.firstname,
+            lastname: user.lastname,
+            email: user.email,
+            isAdmin: user.isAdmin,
+        })
+    }else{
+        res.status(400)
+        throw new Error('Wrong Credentials');
+    }
     res.status(200).json({message: 'User Authentication'})
 })
 

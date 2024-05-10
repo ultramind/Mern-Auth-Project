@@ -12,9 +12,7 @@ dotenv.config();
 // middleware
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));  // send form data
-// app.use(cookieParser())
-
-
+app.use(cookieParser())
 
 // dbConnection
 connectDB()

@@ -61,14 +61,25 @@ const userAuth = asyncHandler( async (req, res) => {
 // route POST => /api/users/logout
 // access public
 const logoutUser = asyncHandler( async (req, res) => {
-    res.status(200).json({message: 'User Logout'})
+    res.cookie('jwt', '', {
+        expires: new Date(0),
+        httpOnly: true
+    })
+    res.status(200).json({message: 'Your logged out successfully'})
 })
 
 // @desc fot the user profile
 // route GET => /api/users/profile
 // access private routes
 const getUserProfile = asyncHandler( async (req, res) => {
-    res.status(200).json({message: 'Get the user profile'})
+
+    res.status(200).json({
+        _id: req.user._id,
+        firstname: req.user.firstname,
+        lastname: req.user.lastname,
+        email: req.user.email,
+        isAdmin: req.user.isAdmin,
+    })
 })
 
 // @desc fot the user Logout

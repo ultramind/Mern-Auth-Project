@@ -1,5 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import cookieParser from 'cookie-parser';
 import userRoute from './routes/userRoute.js'
 import { errorHandler, notFound } from './middlewares/errorMiddleware.js';
 import connectDB from './configs/dbConn.js';
@@ -11,6 +12,7 @@ dotenv.config();
 // middleware
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));  // send form data
+// app.use(cookieParser())
 
 
 

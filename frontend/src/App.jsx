@@ -1,12 +1,19 @@
-import { useState } from 'react'
+import {Routes, Route} from  'react-router-dom'
+import Header from './components/Header'
+import RegisterScreen from './screens/RegisterScreen'
+import LoginScreen from './screens/LoginScreen'
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
-    <>
-      <h1 className='text-red-900'>MERN AUTH</h1>
-    </>
+    <main>
+      <Header/>
+      <Routes>
+        <Route path='/register' element={<RegisterScreen/>}/>
+        <Route path='/login' element={<LoginScreen/>} />
+        <Route path='/' element={<h1>Home</h1>} />
+      </Routes>
+    </main>
   )
 }
 

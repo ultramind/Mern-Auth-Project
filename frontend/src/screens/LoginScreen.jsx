@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { setCredentials } from '../redux/slices/authSlice'
 import { toast } from 'react-toastify'
+import Spinner from '../components/Spinner'
 
 const LoginScreen = () => {
   // get userInfo from global state
@@ -84,6 +85,8 @@ const LoginScreen = () => {
               />
             </label>
           </div>
+
+          {isLoading && <Spinner />}
 
           <button
             type='submit'

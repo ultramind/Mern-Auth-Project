@@ -1,20 +1,44 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
+import { useRegisterMutation } from '../redux/slices/userSlice'
+import { setCredentials } from '../redux/slices/authSlice'
+import { toast } from 'react-toastify'
 
 const RegisterScreen = () => {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const { userInfo } = useSelector(state => state.auth)
+
   const [user, setUser] = useState({
-    firstname:'',
-    lastname:'',
-    email:'',
-    password:'',
-    confirmPassword:''
+    firstname: '',
+    lastname: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
   })
 
-  const [isLoading, setIsLoading] = useState(false)
-  const [buttonDisabled, setButtonDisabled] = useState(false)
+  const [register, { isLoading }] = useRegisterMutation()
 
-  const handleSignUp = ()=>{
-    console.log(user)
+  useEffect(() => {
+    if (userInfo) {
+      navigate('/')
+    }
+  }, [navigate, dispatch])
+
+  const handleSignUp = async () => {
+    if (user.password !== user.confirmPassword) {
+      toast.error('Password do not match!', { position: 'top-center' })
+    } else {
+      try {
+        const res = await register(user).unwrap()
+        dispatch(setCredentials({ ...res }))
+        toast.success('Registration success!', { position: 'top-center' })
+        navigate('/')
+      } catch (err) {
+        toast.error(err?.data?.message || err.error, { position: 'top-center' })
+      }
+    }
   }
 
   return (
@@ -98,7 +122,9 @@ const RegisterScreen = () => {
                 name='confirmPassword'
                 placeholder=' Confirm your Password'
                 value={user.confirmPassword}
-                onChange={e => setUser({ ...user, confirmPassword: e.target.value })}
+                onChange={e =>
+                  setUser({ ...user, confirmPassword: e.target.value })
+                }
                 className='mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400 text-slate-800
             '
               />
@@ -106,9 +132,9 @@ const RegisterScreen = () => {
           </div>
           <button
             onClick={handleSignUp}
-            className='py-2 w-full px-10 text-gray-200 mt-4 bg-slate-600 rounded'
+            className='py-2 w-full px-10 text-gray-200 mt-4 bg-gray-900 rounded'
           >
-            {buttonDisabled ? 'No Sign up ' : 'Sign Up...'}
+            {isLoading ? 'No Sign up ' : 'Sign Up...'}
           </button>
           <Link className='mt-4 block' to='/login'>
             Already a member Login

@@ -18,6 +18,7 @@ const Header = () => {
       const res = await logoutApi().unwrap()
       dispatch(logout())
       toast.success(res.message, { position: 'top-center' })
+      navigate('/login')
     } catch (error) {
       toast.error(error?.data?.message || error.error)
     }
